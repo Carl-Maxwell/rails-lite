@@ -1,12 +1,9 @@
 require 'webrick'
-require_relative '../lib/phase6/controller_base'
-require_relative '../lib/phase6/router'
+# require_relative '../lib/phase6/controller_base'
+# require_relative '../lib/phase6/router'
 
-
-# http://www.ruby-doc.org/stdlib-2.0/libdoc/webrick/rdoc/WEBrick.html
-# http://www.ruby-doc.org/stdlib-2.0/libdoc/webrick/rdoc/WEBrick/HTTPRequest.html
-# http://www.ruby-doc.org/stdlib-2.0/libdoc/webrick/rdoc/WEBrick/HTTPResponse.html
-# http://www.ruby-doc.org/stdlib-2.0/libdoc/webrick/rdoc/WEBrick/Cookie.html
+require_relative '../lib/final/controller_base'
+require_relative '../lib/final/router'
 
 $cats = [
   { id: 1, name: "Curie" },
@@ -19,7 +16,7 @@ $statuses = [
   { id: 3, cat_id: 1, text: "Curie is cool!" }
 ]
 
-class StatusesController < Phase6::ControllerBase
+class StatusesController < ControllerBase
   def index
     statuses = $statuses.select do |s|
       s[:cat_id] == Integer(params[:cat_id])
@@ -29,16 +26,26 @@ class StatusesController < Phase6::ControllerBase
   end
 end
 
-class Cats2Controller < Phase6::ControllerBase
+class CatsController < ControllerBase
   def index
     render_content($cats.to_s, "text/text")
   end
+
+  def new
+  end
+
+  def create
+    $cats << params[:cat].map { |k,v| [k.to_s.to_sym, v] }.to_h.merge($cats.max(:id))
+    redirect_to "/cats"
+  end
 end
 
-router = Phase6::Router.new
+router = Router.new
 router.draw do
-  get Regexp.new("^/cats$"), Cats2Controller, :index
-  get Regexp.new("^/cats/(?<cat_id>\\d+)/statuses$"), StatusesController, :index
+  get  Regexp.new("^/cats$"), CatsController, :index
+  post Regexp.new("^/cats$"), CatsController, :create
+  get  Regexp.new("^/cats/new$"), CatsController, :new
+  get  Regexp.new("^/cats/(?<cat_id>\\d+)/statuses$"), StatusesController, :index
 end
 
 server = WEBrick::HTTPServer.new(Port: 3000)
