@@ -1,5 +1,4 @@
-router = Router.new
-router.draw do
+Router.instance.draw do
   get  Regexp.new("^/cats$"), CatsController, :index
   post Regexp.new("^/cats$"), CatsController, :create
   get  Regexp.new("^/cats/new$"), CatsController, :new

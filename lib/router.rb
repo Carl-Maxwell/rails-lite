@@ -1,6 +1,10 @@
 class Router
   attr_reader :routes
 
+  def self.instance
+    @instance ||= self.new
+  end
+
   def initialize
     @routes = []
   end

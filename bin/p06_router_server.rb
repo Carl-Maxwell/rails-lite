@@ -2,6 +2,18 @@ require 'webrick'
 
 # require all the things
 
+[
+  "lib",
+  "app/controllers",
+  "app/helpers",
+  "app/models",
+  "config"
+].each do |folder|
+  Dir.glob(folder + "/*.rb").each do |rb_file|
+    require_relative "./../" + rb_file
+  end
+end
+
 $cats = [
   { id: 1, name: "Curie" },
   { id: 2, name: "Markov" }
@@ -15,7 +27,7 @@ $statuses = [
 
 server = WEBrick::HTTPServer.new(Port: 3000)
 server.mount_proc('/') do |req, res|
-  route = router.run(req, res)
+  Router.instance.run(req, res)
 end
 
 trap('INT') { server.shutdown }
