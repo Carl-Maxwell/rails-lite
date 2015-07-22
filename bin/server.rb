@@ -1,18 +1,6 @@
 require 'webrick'
 
-# require all the things
-
-[
-  "lib",
-  "app/controllers",
-  "app/helpers",
-  "app/models",
-  "config"
-].each do |folder|
-  Dir.glob(folder + "/*.rb").each do |rb_file|
-    require_relative "./../" + rb_file
-  end
-end
+require_relative '../lib/includer.rb'
 
 $cats = [
   { id: 1, name: "Curie" },

@@ -1,0 +1,3 @@
+class Status < SQLObject
+
+end

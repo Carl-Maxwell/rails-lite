@@ -4,15 +4,15 @@ class Params
   def initialize(req, route_params = {})
     @params = parse_www_encoded_form(req.query_string)
     @params.merge!( parse_www_encoded_form(req.body) )
-
-    # ensure all keys are strings
-    # route_params = route_params.map { |k ,v| [k.to_s, v] }.to_h
-
     @params.merge!( route_params )
+
+    # ensure all keys are symbols, recursively
+
+    @params = recursively_to_sym_hash(@params)
   end
 
   def [](key)
-    params[key.to_s] || params[key.to_sym]
+    params[key.to_s.to_sym]
   end
 
   def to_s
@@ -50,5 +50,13 @@ class Params
 
   def parse_key(key)
     key.split(/[\[\]]+/)
+  end
+
+  private
+
+  def recursively_to_sym_hash(hash)
+    return hash unless hash.is_a?(Hash)
+
+    hash.map { |k ,v| [k.to_s.to_sym, recursively_to_sym_hash(v)] }.to_h
   end
 end

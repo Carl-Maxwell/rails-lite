@@ -42,7 +42,7 @@ class ControllerBase
 
   def render(template)
     controller = self.class.to_s.underscore
-    template = File.read("views/#{controller}/#{template}.html.erb")
+    template = File.read("./app/views/#{controller}/#{template}.html.erb")
 
     render_content(ERB.new(template).result(binding), "text/html")
   end

@@ -1,0 +1,3 @@
+class Cat < SQLObject
+  
+end

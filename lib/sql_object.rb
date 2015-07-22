@@ -16,12 +16,14 @@ class SQLObject
   end
 
   def self.finalize!
-    raise "finalize has already run!" if @columns_has_run
+    return if @finalize_has_run
 
     columns.each do |column|
       define_method(column) { attributes[column] }
       define_method("#{column}=".to_sym) { |value| attributes[column] = value }
     end
+
+    @finalize_has_run = true
   end
 
   def self.table_name=(table_name)
@@ -65,12 +67,18 @@ class SQLObject
   end
 
   def initialize(params = {})
+    self.class.finalize!
+
     params.each do |key, value|
       key = key.to_sym
 
       raise "unknown attribute '#{key}'" unless self.class.columns.include?(key)
       attributes[key] = value
     end
+  end
+
+  def self.create(params = {})
+    self.new(params).save
   end
 
   def attributes

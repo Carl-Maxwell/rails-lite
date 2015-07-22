@@ -22,11 +22,11 @@ class AuthenticityToken
   end
 
   def check_token(params)
-    unless params['authenticity_token']
+    unless params[:authenticity_token]
       raise MissingAuthenticityTokenError
     end
 
-    unless params['authenticity_token'] == @token
+    unless params[:authenticity_token] == @token
       raise InvalidAuthenticityTokenError
     end
 
