@@ -100,7 +100,15 @@ class SQLObject
     attributes[:id] = DBConnection.last_insert_row_id
   end
 
-  def update
+  def update(changes = {})
+    changes.each do |key, value|
+      attributes[key] = value
+    end
+
+    _update
+  end
+
+  def _update
     set_these = attributes.keys.map { |column| "#{column} = :#{column}" }
 
     DBConnection.execute(<<-SQL, attributes)

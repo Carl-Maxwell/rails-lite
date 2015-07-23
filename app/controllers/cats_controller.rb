@@ -25,7 +25,7 @@ class CatsController < ControllerBase
     @cat = Cat.find(params[:id])
 
     if @cat.update(params[:cat])
-      redirect_to "/cats/" + @cat.id
+      redirect_to cat_url(@cat)
     else
       render :edit
     end

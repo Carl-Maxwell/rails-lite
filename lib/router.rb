@@ -17,13 +17,19 @@ class Router
     self.instance_eval(&proc)
   end
 
-  [:get, :post, :put, :delete].each do |http_method|
+  [:get, :post, :put, :patch, :delete].each do |http_method|
     define_method(http_method) do |pattern, controller_class, action_name|
       add_route(pattern, http_method, controller_class, action_name)
     end
   end
 
   def match(req)
+    params = Params.new(req)
+
+    if req.request_method == :post && params[:_method]
+      req.request_method = params[:_method]
+    end
+
     routes.find { |route| route.matches?(req) }
   end
 
@@ -34,6 +40,12 @@ class Router
     else
       res.status = 404
     end
+  end
+
+  def resources(resource, options = {}, &nesting_blk)
+  end
+
+  def resource
   end
 
   class Route
@@ -47,17 +59,15 @@ class Router
     end
 
     def matches?(req)
-      req.path = req.path[0...-1] if req.path[-1] == '/'
-
-      pattern =~ req.path && req.request_method.downcase.to_sym == http_method
+      pattern =~ req.path && req.request_method == http_method
     end
 
     def run(req, res)
-      params = pattern.match(req.path)
+      route_params = pattern.match(req.path)
 
-      params = params.names.zip(params.captures).to_h
+      route_params = route_params.names.zip(route_params.captures).to_h
 
-      (controller_class.new(req, res, params)).invoke_action(action_name)
+      (controller_class.new(req, res, route_params)).invoke_action(action_name)
     end
   end
 end

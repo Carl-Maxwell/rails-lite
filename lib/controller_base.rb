@@ -9,12 +9,12 @@ class ControllerBase
   attr_reader :req, :res, :params
 
   def initialize(req, res, route_params = {})
-    @req    = req
-    @res    = res
-    @params = Params.new(req, route_params)
+    @req                = req
+    @res                = res
+    @params             = Params.new(req, route_params)
     @authenticity_token = AuthenticityToken.new(req)
 
-    if req.request_method.downcase.to_sym != :get
+    if req.request_method != :get
       @authenticity_token.check_token(params)
     end
 
@@ -66,9 +66,7 @@ class ControllerBase
     res.status = 302
     res["location"] = url
 
-    session.store_session(res)
-    flash.store_flash(res)
-    @authenticity_token.store_token(res)
+    finish_response
   end
 
   def render_content(content, content_type)
@@ -77,6 +75,10 @@ class ControllerBase
     res.body = content
     res.content_type = content_type
 
+    finish_response
+  end
+
+  def finish_response
     session.store_session(res)
     flash.store_flash(res)
     @authenticity_token.store_token(res)

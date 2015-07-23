@@ -15,7 +15,7 @@ $statuses = [
 
 server = WEBrick::HTTPServer.new(Port: 3000)
 server.mount_proc('/') do |req, res|
-  Router.instance.run(req, res)
+  Router.instance.run(Request.new(req), res)
 end
 
 trap('INT') { server.shutdown }

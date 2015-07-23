@@ -2,7 +2,7 @@
 <pre><%= html_escape(@cats.to_s) %></pre>
 
 <% @cats.each do |cat|%>
-  <%= link_to cat.name, "cats/#{cat.id}" %>
+  <%= link_to cat.name, cat_url(cat) %>
   <br /><br />
 <% end %>
 <a href="/cats/new">New cat!</a>
