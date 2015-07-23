@@ -3,5 +3,5 @@
 <br />
 Cats # show
 
-
-<%= link_to "edit", "cats/" + cat.id + ""%>
+<%= link_to @cat.name, @cat %>
+<%= link_to "edit", edit_cat_url(@cat) %>

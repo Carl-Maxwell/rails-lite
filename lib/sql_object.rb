@@ -116,4 +116,8 @@ class SQLObject
   def save
     attributes.include?(:id) ? update : insert
   end
+
+  def parameterize
+    self.id
+  end
 end

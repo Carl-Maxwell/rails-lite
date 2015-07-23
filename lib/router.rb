@@ -47,6 +47,8 @@ class Router
     end
 
     def matches?(req)
+      req.path = req.path[0...-1] if req.path[-1] == '/'
+
       pattern =~ req.path && req.request_method.downcase.to_sym == http_method
     end
 
