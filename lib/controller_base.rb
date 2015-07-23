@@ -17,6 +17,12 @@ class ControllerBase
     if req.request_method.downcase.to_sym != :get
       @authenticity_token.check_token(params)
     end
+
+    Dir.glob("./app/helpers/*.rb").each do |helper_file|
+      helper = helper_file.split('/')[-1][0..-4]
+      helper = helper.classify.constantize
+      extend(helper)
+    end
   end
 
   def session
@@ -25,12 +31,6 @@ class ControllerBase
 
   def flash
     @flash ||= Flash.new(req)
-  end
-
-  HTML_ESCAPE = { '&' => '&amp;', '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "'" => '&#39;' }
-
-  def html_escape(str)
-    str.chars.map { |l| HTML_ESCAPE[l] || l }.join("")
   end
 
   def form_authenticity_token

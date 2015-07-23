@@ -54,7 +54,7 @@ class SQLObject
   end
 
   def self.find(id)
-    row = DBConnection.execute(<<-SQL, id).first
+    row = DBConnection.execute(<<-SQL, id.to_i).first
       SELECT
         *
       FROM

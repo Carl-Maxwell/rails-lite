@@ -1,0 +1,3 @@
+module UrlHelper
+  # magic?
+end

@@ -30,7 +30,7 @@ class DBConnection
   end
 
   def self.execute(*args)
-    puts args[0]
+    puts args[0], "[#{args[1..-1].to_s}]"
 
     instance.execute(*args)
   end
