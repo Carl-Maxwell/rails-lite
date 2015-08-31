@@ -36,6 +36,6 @@ class CatsController < ControllerBase
 
     @cat.destroy!
 
-    redirect_to '/cats'
+    redirect_to cats_url
   end
 end

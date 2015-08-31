@@ -121,6 +121,19 @@ class SQLObject
     SQL
   end
 
+  def destroy
+    DBConnection.execute(<<-SQL, id.to_i)
+      DELETE FROM
+        #{self.class.table_name}
+      WHERE
+        id = ?
+    SQL
+  end
+
+  def destroy!
+    raise "Failed to destroy!" unless destroy
+  end
+
   def save
     attributes.include?(:id) ? update : insert
   end
