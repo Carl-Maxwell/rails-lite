@@ -30,13 +30,13 @@ class DBConnection
   end
 
   def self.execute(*args)
-    puts args[0], "[#{args[1..-1].to_s}]"
+    puts args[0].gsub(/[\s]+/, " ").strip + ", [#{args[1..-1].to_s}]"
 
     instance.execute(*args)
   end
 
   def self.execute2(*args)
-    puts args[0]
+    puts args[0].gsub(/[\s]+/, " ").strip + ", [#{args[1..-1].to_s}]"
 
     instance.execute2(*args)
   end
